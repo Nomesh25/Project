@@ -28,6 +28,17 @@ const Bg3 = document.querySelector(".bg-3");
 
 const logo = document.querySelector(".logo");
 
+//action buttons changes
+const feeds = document.querySelectorAll(".feed");
+const heartButton = document.querySelectorAll(
+  ".interaction-buttons span:nth-child(1)"
+);
+// Get the bookmarks button
+const bookmarksButton = document.querySelectorAll(".bookmarks-button span");
+
+//friend request cards
+const requestCards = document.querySelectorAll(".request");
+
 const changeActiveItem = () => {
   menuItems.forEach((item) => {
     item.classList.remove("active");
@@ -197,4 +208,110 @@ Bg1.addEventListener("click", () => {
 //background change inn this
 logo.addEventListener("click", () => {
   window.location.reload();
+});
+
+feeds.forEach((feed) => {
+  // Get the heart button and bookmarks button within the current feed
+  const heartButton = feed.querySelector(
+    ".interaction-buttons span:nth-child(1)"
+  );
+  const bookmarksButton = feed.querySelector(".bookmarks-button span");
+
+  // Add click event listener to the heart button
+  heartButton.addEventListener("click", () => {
+    // Toggle the color of the heart button
+    if (heartButton.style.color === "red") {
+      heartButton.style.color = ""; // Reset to the default color
+    } else {
+      heartButton.style.color = "red"; // Replace 'red' with your desired color
+    }
+  });
+
+  // Add click event listener to the bookmarks button
+  bookmarksButton.addEventListener("click", () => {
+    // Toggle the color of the bookmarks button
+    if (bookmarksButton.style.color === "black") {
+      bookmarksButton.style.color = ""; // Reset to the default color
+    } else {
+      bookmarksButton.style.color = "gray";
+    }
+  });
+});
+
+//friend request card
+requestCards.forEach((card) => {
+  const acceptButton = card.querySelector(".btn.btn-primary");
+  const declineButton = card.querySelector(".btn");
+
+  // Add click event listener to the Decline button's parent container
+  declineButton.parentElement.addEventListener("click", () => {
+    card.remove(); // Remove the card from the DOM
+  });
+
+  // Add click event listener to the Accept button
+  acceptButton.addEventListener("click", () => {
+    const friendName = card.querySelector("h5").textContent;
+    // Prompt a message with the friend's name
+    const message = `Added ${friendName} to the list.`;
+    alert(message);
+
+    card.remove(); // Remove the current request card from the DOM
+  });
+});
+
+// Get the create post form and feed container
+const createPostForm = document.querySelector(".create-post");
+const feedContainer = document.querySelector(".feeds");
+
+// Add submit event listener to the create post form
+createPostForm.addEventListener("submit", (event) => {
+  event.preventDefault(); // Prevent form submission
+
+  // Get the entered post text
+  const postInput = document.getElementById("create-post");
+  const postText = postInput.value;
+
+  if (postText.trim() !== "") {
+    // Create a new feed element
+    const newFeedItem = document.createElement("div");
+    newFeedItem.classList.add("feed");
+
+    // Construct the HTML structure for the new feed item
+    newFeedItem.innerHTML = `
+      <div class="head">
+        <div class="user">
+          <div class="profile-picture">
+            <img src="./images/profile-1.jpg" alt="" />
+          </div>
+          <div class="info">
+            <h3>Nomesh Patel</h3>
+            <small>Home, Just now</small>
+          </div>
+        </div>
+        <span class="edit"><i class="uil uil-ellipsis-h"></i></span>
+      </div>
+      <div class="text">${postText}</div>
+      <div class="action-button">
+        <div class="interaction-buttons">
+          <span><i class="uil uil-heart"></i></span>
+          <span><i class="uil uil-comment-alt"></i></span>
+          <span><i class="uil uil-share-alt"></i></span>
+        </div>
+        <div class="bookmarks-button">
+          <span><i class="uil uil-bookmark-full"></i></span>
+        </div>
+      </div>
+      <div class="liked-by">
+        <span><img src="./images/profile-1.jpg" alt="" /></span>
+        <p>Liked by <b>You</b></p>
+      </div>
+      <div class="comments stext-muted">View all comments</div>
+    `;
+
+    // Prepend the new feed item to the feed container
+    feedContainer.prepend(newFeedItem);
+
+    // Reset the input value
+    postInput.value = "";
+  }
 });
